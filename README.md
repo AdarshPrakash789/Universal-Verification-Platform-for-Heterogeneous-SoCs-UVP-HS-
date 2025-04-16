@@ -1,5 +1,4 @@
-Universal Verification Platform for Heterogeneous SoCs (UVP-HS)
-
+Universal Verification Platform for Heterogeneous SoCs (UVP-HS) 
 ### Objective:
 Develop a reusable, scalable UVM-based verification environment supporting heterogeneous SoC components (ARM, RISC-V, DSPs).
 
@@ -137,68 +136,3 @@ Email: kumaradarsh663@gmail.com
 Mobile: +91 7033675921
 
 ---
-
-## Project 2: SoC Low Power Verification Framework Using UPF 3.0 + Emulation
-
-### Tech Stack:
-- SystemVerilog, UPF 3.0, UVM, SVA
-- Synopsys VCS, Veloce
-
-### Directory Structure:
-```
-lowpower-verification/
-├── rtl/
-│   └── core.v
-├── upf/
-│   └── soc_power.upf
-├── tb/
-│   └── testbench.sv
-├── Makefile
-├── compile.f
-```
-
-### Code Files
-
-**soc_power.upf**
-```tcl
-create_power_domain PD_CORE -elements { core }
-create_power_domain PD_MEM -elements { mem }
-set_isolation iso_mem -domain PD_MEM -clamp_value 0
-set_retention ret_core -domain PD_CORE -ret_signal core_ret
-```
-
-**core.v**
-```verilog
-module core(input clk, input rst_n, output logic done);
-  always_ff @(posedge clk or negedge rst_n)
-    if (!rst_n) done <= 0;
-    else done <= 1;
-endmodule
-```
-
-**testbench.sv**
-```systemverilog
-module testbench;
-  logic clk = 0, rst_n = 0;
-  always #5 clk = ~clk;
-
-  core dut(.clk(clk), .rst_n(rst_n), .done());
-
-  initial begin
-    #10 rst_n = 1;
-    #100 $finish;
-  end
-endmodule
-```
-
-**Makefile**
-```
-all:
-	vcs -full64 -sverilog -debug_access+all rtl/core.v tb/testbench.sv -l vcs.log
-	simv
-```
-
-### Author:
-**Adarsh Prakash**  
-Email: kumaradarsh663@gmail.com  
-Mobile: +91 7033675921
